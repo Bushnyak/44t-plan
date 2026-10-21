@@ -1,0 +1,952 @@
+<!doctype html>
+<html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<style>:root{color-scheme:light}body{margin:0;font:14px system-ui,sans-serif}[hidden]{display:none!important}</style>
+<title>Планировка квартиры П-44Т</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Jost:wght@400;500;600&family=Onest:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* Layout: toolbar on top, scaled plan on the left, catalog / properties panel on the right (stacked on phones). */
+:root{
+  --paper:#e9edf2; --panel:#f7f9fb; --line:#cdd5df; --ink:#1b2430; --ink2:#5a6778;
+  --floor:#f3e9c6; --wall:#1d3350; --glass:#bfe3f2; --grid:rgba(29,51,80,.10);
+  --accent:#1f6feb; --accent-ink:#ffffff; --bad:#d92d20; --ok:#1a7f4b;
+  --c-sleep:#9bbbe0; --c-living:#e6ae84; --c-store:#b9a68b; --c-work:#8fbf9f; --c-kitchen:#e3cf7a; --c-bath:#a8d0d6; --c-hall:#c5b3d6;
+  --furn-ink:#1b2430; --furn-line:rgba(27,36,48,.75);
+  --zone:#1f6feb; --note:#ffe58a; --rug:#c8695a; --plant:#6b8f5a;
+  --f-ui:"Onest",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --f-disp:"Jost","Onest",system-ui,sans-serif;
+  --f-mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --paper:#0f141b; --panel:#171e28; --line:#2b3544; --ink:#e6ebf2; --ink2:#93a1b4;
+  --floor:#2a3341; --wall:#6e86a8; --glass:#4a7f9a; --grid:rgba(160,180,210,.10);
+  --accent:#5b9bff; --accent-ink:#0b1220; --bad:#ff6b5e; --ok:#4cc38a;
+  --c-sleep:#7da3d1; --c-living:#d79a6e; --c-store:#a3917a; --c-work:#78ad89; --c-kitchen:#cdb963; --c-bath:#8bbcc3; --c-hall:#ad9cc2;
+  --furn-ink:#10161e; --furn-line:rgba(10,14,20,.8);
+  --zone:#5b9bff; --note:#e8cf6e; --rug:#b8685a; --plant:#5c8a62; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --paper:#0f141b; --panel:#171e28; --line:#2b3544; --ink:#e6ebf2; --ink2:#93a1b4;
+  --floor:#2a3341; --wall:#6e86a8; --glass:#4a7f9a; --grid:rgba(160,180,210,.10);
+  --accent:#5b9bff; --accent-ink:#0b1220; --bad:#ff6b5e; --ok:#4cc38a;
+  --c-sleep:#7da3d1; --c-living:#d79a6e; --c-store:#a3917a; --c-work:#78ad89; --c-kitchen:#cdb963; --c-bath:#8bbcc3; --c-hall:#ad9cc2;
+  --furn-ink:#10161e; --furn-line:rgba(10,14,20,.8);
+  --zone:#5b9bff; --note:#e8cf6e; --rug:#b8685a; --plant:#5c8a62; color-scheme:dark}
+*{box-sizing:border-box}
+html,body{height:auto}
+body{margin:0;background:var(--paper);color:var(--ink);font:14px/1.4 var(--f-ui);
+  padding-block:0;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+button,input,select{font:inherit;color:inherit}
+.app{display:flex;flex-direction:column;gap:12px;padding-block:14px 20px;max-width:1500px;margin:0 auto}
+.bar{display:flex;flex-wrap:wrap;gap:10px 16px;align-items:center;justify-content:space-between}
+.brand{display:flex;align-items:baseline;gap:10px;min-width:0}
+.brand h1{font:600 20px/1 var(--f-disp);margin:0;letter-spacing:.01em}
+.brand span{font:12px var(--f-mono);color:var(--ink2)}
+.tools{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:8px;overflow:hidden;background:var(--panel)}
+.seg button{border:0;background:transparent;padding:7px 11px;cursor:pointer;min-height:34px}
+.seg button+button{border-left:1px solid var(--line)}
+.seg button:hover{background:color-mix(in srgb,var(--accent) 10%,transparent)}
+.seg button[aria-pressed="true"]{background:var(--accent);color:var(--accent-ink)}
+.btn{border:1px solid var(--line);background:var(--panel);border-radius:8px;padding:7px 12px;cursor:pointer;min-height:34px}
+.btn:hover{border-color:var(--accent)}
+.btn.danger:hover{border-color:var(--bad);color:var(--bad)}
+.btn:disabled{opacity:.4;cursor:default}
+select.btn{padding-right:6px;max-width:240px}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.main{display:grid;grid-template-columns:minmax(0,1fr) 330px;gap:14px;align-items:start}
+.stage{position:relative;border:1px solid var(--line);border-radius:12px;background:var(--paper);overflow:hidden;
+  background-image:radial-gradient(var(--grid) 1px,transparent 1px);background-size:18px 18px}
+#plan{display:block;width:100%;height:min(78vh,860px);touch-action:none;user-select:none;-webkit-user-select:none;cursor:grab}
+#plan.panning{cursor:grabbing}
+.hint{position:absolute;left:10px;bottom:8px;font:12px var(--f-ui);color:var(--ink2);background:color-mix(in srgb,var(--paper) 85%,transparent);padding:3px 8px;border-radius:6px;pointer-events:none;max-width:calc(100% - 20px)}
+.status{position:absolute;right:10px;top:8px;display:flex;gap:8px;align-items:center;font:12px var(--f-mono);padding:4px 9px;border-radius:999px;background:var(--panel);border:1px solid var(--line)}
+.status i{width:8px;height:8px;border-radius:50%;background:var(--ok);display:inline-block}
+.status.bad i{background:var(--bad)}
+.zoom{position:absolute;right:10px;bottom:10px;display:flex;flex-direction:column}
+.side{display:flex;flex-direction:column;gap:12px;min-width:0}
+.card{border:1px solid var(--line);border-radius:12px;background:var(--panel);padding:12px;min-width:0}
+.card h2{font:600 15px/1.2 var(--f-disp);margin:0 0 10px;letter-spacing:.02em}
+.tabs{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:10px}
+.tabs button{border:1px solid var(--line);background:transparent;border-radius:999px;padding:4px 10px;cursor:pointer;font-size:12.5px}
+.tabs button[aria-pressed="true"]{background:var(--ink);color:var(--panel);border-color:var(--ink)}
+.cat{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px;max-height:340px;overflow:auto;padding-right:2px}
+.cat button{display:flex;align-items:center;gap:8px;text-align:left;border:1px solid var(--line);background:transparent;border-radius:8px;padding:6px 8px;cursor:pointer;min-width:0}
+.cat button:hover{border-color:var(--accent);background:color-mix(in srgb,var(--accent) 8%,transparent)}
+.cat b{display:block;font-weight:500;font-size:12.5px;line-height:1.2;overflow:hidden;text-overflow:ellipsis}
+.cat small{display:block;font:11px var(--f-mono);color:var(--ink2)}
+.cat .sw{flex:none;width:14px;height:14px;border-radius:4px;border:1px solid var(--furn-line)}
+.props{display:grid;grid-template-columns:1fr 1fr;gap:8px 10px}
+.props label{display:flex;flex-direction:column;gap:3px;font-size:12px;color:var(--ink2);min-width:0}
+.props label.wide{grid-column:1/-1}
+.props input{border:1px solid var(--line);background:var(--paper);border-radius:7px;padding:6px 8px;font:13px var(--f-mono);color:var(--ink);min-width:0;width:100%}
+.props input[type=text]{font-family:var(--f-ui)}
+.row{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+.empty{color:var(--ink2);font-size:13px;margin:0}
+details summary{cursor:pointer;font:600 13px var(--f-disp);letter-spacing:.02em}
+.names{display:grid;grid-template-columns:1fr 1fr;gap:6px 8px;margin-top:10px}
+.names label{display:flex;flex-direction:column;gap:2px;font-size:11.5px;color:var(--ink2)}
+.names input{border:1px solid var(--line);background:var(--paper);border-radius:7px;padding:5px 7px;font-size:13px;color:var(--ink);min-width:0}
+.legend{display:flex;flex-wrap:wrap;gap:6px 12px;font-size:12px;color:var(--ink2);margin:10px 0 0}
+.legend span{display:inline-flex;align-items:center;gap:5px}
+.legend i{width:10px;height:10px;border-radius:3px;display:inline-block;border:1px solid var(--furn-line)}
+.note{font-size:12px;color:var(--ink2);margin:8px 0 0}
+/* plan svg text */
+.rname{font-family:var(--f-disp);font-weight:600;fill:var(--wall);opacity:.78}
+.rarea{font-family:var(--f-mono);fill:var(--wall);opacity:.7}
+.flabel{font-family:var(--f-ui);font-weight:500;fill:var(--furn-ink);pointer-events:none}
+.dimtxt{font-family:var(--f-mono);fill:var(--accent);pointer-events:none}
+.sws{display:flex;flex-wrap:wrap;gap:6px;margin-top:4px}
+.sws button{width:24px;height:24px;border-radius:50%;border:1px solid var(--line);cursor:pointer;padding:0;position:relative}
+.sws button[aria-pressed="true"]{outline:2px solid var(--accent);outline-offset:2px}
+.sws button.auto{background:conic-gradient(#e6ae84,#9bbbe0,#8fbf9f,#e3cf7a,#e6ae84)}
+.sub{font:600 12px var(--f-disp);letter-spacing:.04em;text-transform:uppercase;color:var(--ink2);margin:12px 0 6px}
+.sub:first-of-type{margin-top:0}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chips button{border:1px solid var(--line);background:transparent;border-radius:999px;padding:5px 11px;cursor:pointer;font-size:12.5px}
+.chips button[aria-pressed="true"]{background:var(--ink);color:var(--panel);border-color:var(--ink)}
+.fin{display:grid;grid-template-columns:1fr 1fr;gap:6px 8px}
+.fin label{display:flex;flex-direction:column;gap:2px;font-size:11.5px;color:var(--ink2);min-width:0}
+.fin select{border:1px solid var(--line);background:var(--paper);border-radius:7px;padding:5px 6px;font-size:12.5px;color:var(--ink);min-width:0}
+.xbox{width:100%;margin-top:8px;border:1px solid var(--line);background:var(--paper);color:var(--ink);border-radius:7px;padding:6px 8px;font:11px/1.35 var(--f-mono);resize:vertical;min-height:60px}
+@media (max-width:900px){
+  .main{grid-template-columns:minmax(0,1fr)}
+  #plan{height:62vh}
+  .cat{max-height:300px}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+<div class="app">
+  <div class="bar">
+    <div class="brand"><h1>Планировка П-44Т</h1><span>80,7 м² · 3 комнаты</span></div>
+    <div class="tools">
+      <select id="variantSel" class="btn" aria-label="Вариант расстановки"></select>
+      <button class="btn" id="variantNew" title="Пустой вариант">+ Новый</button>
+      <button class="btn" id="variantCopy" title="Копия текущего варианта">Копия</button>
+      <input class="btn" id="variantName" type="text" maxlength="40" aria-label="Название варианта" style="width:160px;cursor:text">
+      <button class="btn danger" id="variantDel">Удалить</button>
+      <div class="seg" role="group" aria-label="Показать">
+        <button id="tGrid" aria-pressed="true">Сетка</button>
+        <button id="tNames" aria-pressed="true">Комнаты</button>
+        <button id="tDims" aria-pressed="false">Размеры</button>
+        <button id="tLook" aria-pressed="false">Интерьер</button>
+      </div>
+    </div>
+  </div>
+  <div class="main">
+    <div class="stage" id="stage">
+      <svg id="plan" role="img" aria-label="План квартиры с мебелью"></svg>
+      <div class="status" id="status"><i></i><span id="statusTxt">без пересечений</span></div>
+      <div class="zoom seg" style="flex-direction:column">
+        <button id="zIn" aria-label="Приблизить">+</button>
+        <button id="zOut" aria-label="Отдалить">−</button>
+        <button id="zFit" aria-label="Весь план" style="font-size:12px">⤢</button>
+      </div>
+      <div class="hint" id="hint">Тащите мебель мышью. R — повернуть, Del — удалить, стрелки — сдвиг на 5 см. Фон тащить — двигать план.</div>
+    </div>
+    <div class="side">
+      <div class="card" id="propsCard">
+        <h2 id="propsTitle">Выбранный предмет</h2>
+        <div id="propsBody"></div>
+      </div>
+      <div class="card" id="lookCard">
+        <h2>Оформление</h2>
+        <div class="sub">Вид</div>
+        <div class="chips" id="lookChips"></div>
+        <div class="sub">Палитра мебели</div>
+        <div class="chips" id="palChips"></div>
+        <div class="sub">Стены</div>
+        <div class="sws" id="wallSws"></div>
+        <div class="sub">Полы по комнатам</div>
+        <div class="fin" id="finSel"></div>
+        <p class="note">Полы и стены видны в режиме «Интерьер». Цвет отдельного предмета меняется в его свойствах.</p>
+      </div>
+      <div class="card">
+        <h2>Мебель и разметка</h2>
+        <div class="tabs" id="tabs"></div>
+        <div class="cat" id="cat"></div>
+        <p class="note">Нажмите на предмет, он появится в центре экрана. Размеры в сантиметрах, их можно менять.</p>
+      </div>
+      <div class="card">
+        <h2>Обмен вариантами</h2>
+        <p class="note" style="margin:0 0 8px">Скопируйте код варианта, отправьте его в мессенджере, а получатель вставит его ниже.</p>
+        <div class="row" style="margin-top:0"><button class="btn" id="xCopy">Скопировать код варианта</button></div>
+        <textarea id="xBox" class="xbox" rows="3" placeholder="Вставьте сюда код варианта" aria-label="Код варианта"></textarea>
+        <div class="row"><button class="btn" id="xLoad">Загрузить как новый вариант</button></div>
+        <p class="note" id="xMsg" aria-live="polite"></p>
+      </div>
+      <div class="card">
+        <details>
+          <summary>Названия комнат</summary>
+          <div class="names" id="names"></div>
+          <p class="note">Я угадал назначение комнат по площадям. Поправьте, если не так.</p>
+        </details>
+        <div class="legend">
+          <span><i style="background:var(--bad);opacity:.6"></i>красный контур: пересечение или выход за стену</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<script>window.P44_EMBED={"names": {"bed": "Спальня", "liv": "Гостиная", "cab": "Кабинет", "lg2": "Лоджия", "kit": "Кухня", "hall": "Прихожая", "wc": "WC", "bath": "Ванная", "lg1": "Лоджия"}, "variants": [{"id": "v1", "name": "Вариант 1 — как расставил Сергей", "items": [{"id": "imvikhlj40q0", "t": "bed160", "x": 1.95, "y": 1.12, "rot": 0, "w": 1.6, "d": 2, "label": "Кровать"}, {"id": "imvikhlj412a", "t": "night", "x": 0.925, "y": 0.32, "rot": 0, "w": 0.45, "d": 0.4, "label": "Тумба"}, {"id": "imvikhlj42q1", "t": "night", "x": 3, "y": 0.32, "rot": 0, "w": 0.45, "d": 0.4, "label": "Тумба"}, {"id": "imvikhlj43t1", "t": "wardrobe2", "x": 4.07, "y": 1.12, "rot": 90, "w": 2, "d": 0.6, "label": "Шкаф-купе"}, {"id": "cd3420ef21", "t": "cdesk", "x": -0.225, "y": 4.4, "w": 1.15, "d": 1.4, "rot": 0, "label": "Стол"}, {"id": "imvikhlj47as", "t": "wchair", "x": -0.75, "y": 5.050000000000001, "rot": 195, "w": 0.6, "d": 0.6, "label": "Кресло"}, {"id": "imvikhlj49ty", "t": "shelf", "x": -0.9, "y": 6.95, "rot": 0, "w": 1.5, "d": 0.4, "label": "Стеллаж"}, {"id": "imvikhlj4akp", "t": "wardrobe", "x": 1.7000000000000002, "y": 6.9, "rot": 180, "w": 3.0500000000000003, "d": 0.55, "label": "Шкаф"}, {"id": "imvikhlj4b2i", "t": "zone", "x": 5.800000000000001, "y": 1.75, "rot": 0, "w": 2.35, "d": 3.3000000000000003, "label": "Зона отдыха"}, {"id": "imvikhlj4cc1", "t": "rug", "x": 6.050000000000001, "y": 1.55, "rot": 90, "w": 2.4, "d": 1.7, "label": "Ковёр"}, {"id": "imvikhlj4d7h", "t": "tv", "x": 4.8500000000000005, "y": 1.6500000000000001, "rot": 270, "w": 1.5, "d": 0.4, "label": "ТВ"}, {"id": "imvikhlj4e8k", "t": "sofa3", "x": 7.45, "y": 1.6500000000000001, "rot": 90, "w": 2.2, "d": 0.95, "label": "Диван"}, {"id": "imvikhlj4f5g", "t": "coffee", "x": 6.1000000000000005, "y": 1.7000000000000002, "rot": 90, "w": 1, "d": 0.55, "label": "Журн. стол"}, {"id": "imvikhlj4h9w", "t": "shelf", "x": 9.15, "y": 3.1500000000000004, "rot": 180, "w": 0.8, "d": 0.35, "label": "Стеллаж"}, {"id": "imvikhlj4it0", "t": "arm", "x": 5.95, "y": 0.15000000000000002, "rot": 0, "w": 0.8, "d": 0.85, "label": "Кресло"}, {"id": "imvikhlj4jlc", "t": "plant", "x": 7, "y": 0.05, "rot": 0, "w": 0.4, "d": 0.4, "label": ""}, {"id": "imvikhlj4kpb", "t": "zone", "x": -1.85, "y": 9, "rot": 0, "w": 1.9, "d": 1.9, "label": "Обеденная зона"}, {"id": "imvikhlj4lvw", "t": "kset", "x": 0.05, "y": 10.450000000000001, "rot": 180, "w": 2.4000000000000004, "d": 0.6000000000000001, "label": "Кухня"}, {"id": "imvikhlj4mnv", "t": "fridge", "x": 0.9500000000000001, "y": 9.25, "rot": 180, "w": 0.6, "d": 0.65, "label": "Холод."}, {"id": "imvikhlj4nc9", "t": "dtable", "x": -1.6, "y": 8.950000000000001, "rot": 90, "w": 1.2, "d": 0.75, "label": "Стол"}, {"id": "imvikhlj4oe5", "t": "dchair", "x": -2.25, "y": 8.65, "rot": 270, "w": 0.45, "d": 0.45, "label": ""}, {"id": "imvikhlj4p3p", "t": "dchair", "x": -2.3000000000000003, "y": 9.25, "rot": 270, "w": 0.45, "d": 0.45, "label": ""}, {"id": "imvikhlj4qjj", "t": "dchair", "x": -0.9, "y": 8.65, "rot": 90, "w": 0.45, "d": 0.45, "label": ""}, {"id": "imvikhlj4rtk", "t": "dchair", "x": -0.8500000000000001, "y": 9.25, "rot": 90, "w": 0.45, "d": 0.45, "label": ""}, {"id": "imvikhlj4sus", "t": "wardrobe", "x": 5.2, "y": 5.65, "rot": 90, "w": 2.5500000000000003, "d": 0.55, "label": "Шкаф"}, {"id": "imvikhlj4tm7", "t": "bench", "x": 5.28, "y": 7.8, "rot": 90, "w": 0.8, "d": 0.35, "label": "Банкетка"}, {"id": "imviku58g2srl", "t": "desk", "x": 9.5, "y": 0.5, "rot": 0, "w": 1.4, "d": 0.7, "label": "Стол"}, {"id": "imvikukep31i9", "t": "wchair", "x": 9.55, "y": 1.4000000000000001, "rot": 180, "w": 0.6, "d": 0.6, "label": "Кресло"}, {"id": "imvikwx5e3jqa", "t": "stove", "x": 0.9500000000000001, "y": 9.850000000000001, "rot": 0, "w": 0.6, "d": 0.6, "label": "Плита"}]}, {"id": "v2", "name": "Вариант 2 — рекомендованный", "items": [{"id": "rmvilkxqw0", "t": "bed160", "x": 1.8, "y": 1.1500000000000001, "rot": 0, "w": 1.6, "d": 2, "label": "Кровать"}, {"id": "rmvilkxqx1", "t": "night", "x": 0.75, "y": 0.35000000000000003, "rot": 0, "w": 0.45, "d": 0.4, "label": "Тумба"}, {"id": "rmvilkxqx2", "t": "night", "x": 2.85, "y": 0.35000000000000003, "rot": 0, "w": 0.45, "d": 0.4, "label": "Тумба"}, {"id": "cde326f66a", "t": "cdesk", "x": -0.225, "y": 4.4, "w": 1.15, "d": 1.4, "rot": 0, "label": "Стол"}, {"id": "rmvilkxqx7", "t": "wardrobe2", "x": 1.3, "y": 3.95, "rot": 0, "w": 1.75, "d": 0.55, "label": "Гардероб"}, {"id": "rmvilkxqx8", "t": "wardrobe", "x": 2.7, "y": 3.94, "rot": 0, "w": 1, "d": 0.58, "label": "Гардероб"}, {"id": "rmvilkxqx9", "t": "sofa2", "x": 1.6, "y": 6.74, "rot": 180, "w": 1.6, "d": 0.9, "label": "Гостевой диван"}, {"id": "rmvilkxqx12", "t": "wchair", "x": -0.8, "y": 5.1000000000000005, "rot": 215, "w": 0.6, "d": 0.6, "label": ""}, {"id": "rmvilkxqx14", "t": "rug", "x": 6.4, "y": 1.55, "rot": 90, "w": 2.4, "d": 1.7, "label": "Ковёр"}, {"id": "rmvilkxqx15", "t": "tv", "x": 4.81, "y": 1.5, "rot": 270, "w": 1.5, "d": 0.4, "label": "ТВ"}, {"id": "rmvilkxqx16", "t": "coffee", "x": 6.05, "y": 1.55, "rot": 90, "w": 1, "d": 0.55, "label": "Журн. стол"}, {"id": "rmvilkxqx17", "t": "sofa3", "x": 7.55, "y": 1.55, "rot": 90, "w": 2.2, "d": 0.95, "label": "Диван"}, {"id": "rmvilkxqx18", "t": "arm", "x": 6, "y": 0.15000000000000002, "rot": 0, "w": 0.8, "d": 0.85, "label": "Кресло"}, {"id": "rmvilkxqx19", "t": "plant", "x": 6.8500000000000005, "y": 0.15000000000000002, "rot": 0, "w": 0.4, "d": 0.4, "label": ""}, {"id": "rmvilkxqx21", "t": "desk", "x": 9.88, "y": 0.82, "rot": 90, "w": 1.4, "d": 0.7, "label": "Стол"}, {"id": "rmvilkxqx22", "t": "wchair", "x": 9.15, "y": 0.82, "rot": 270, "w": 0.6, "d": 0.6, "label": ""}, {"id": "rmvilkxqx23", "t": "shelf", "x": 8.9, "y": 3.235, "rot": 180, "w": 0.8, "d": 0.35, "label": "Стеллаж"}, {"id": "rmvilkxqx24", "t": "shelf", "x": 8.1, "y": 3.235, "rot": 180, "w": 0.8, "d": 0.35, "label": "Стеллаж"}, {"id": "rmvilkxqx25", "t": "kset", "x": 0.08, "y": 10.41, "rot": 180, "w": 2.3, "d": 0.6, "label": "Кухня"}, {"id": "rmvilkxqx26", "t": "fridge", "x": 0.905, "y": 9.2, "rot": 90, "w": 0.6, "d": 0.65, "label": "Холод."}, {"id": "rmvilkxqx27", "t": "stove", "x": 0.93, "y": 9.8, "rot": 90, "w": 0.6, "d": 0.6, "label": "Плита"}, {"id": "rmvilkxqx29", "t": "ksofa", "x": -0.8500000000000001, "y": 7.75, "rot": 0, "w": 1.3, "d": 0.62, "label": "Диванчик"}, {"id": "rmvilkxqx30", "t": "dtable", "x": -0.8500000000000001, "y": 8.6, "rot": 180, "w": 1.2, "d": 0.75, "label": "Стол"}, {"id": "rmvilkxqx31", "t": "dchair", "x": -1.8, "y": 8.6, "rot": 270, "w": 0.45, "d": 0.45, "label": ""}, {"id": "rmvilkxqx32", "t": "dchair", "x": -1.05, "y": 9.35, "rot": 180, "w": 0.45, "d": 0.45, "label": ""}, {"id": "rmvilkxqx33", "t": "wardrobe", "x": 5.18, "y": 5.9, "rot": 90, "w": 2.4, "d": 0.55, "label": "Шкаф"}, {"id": "rmvilkxqx34", "t": "bench", "x": 5.28, "y": 7.8, "rot": 90, "w": 0.8, "d": 0.35, "label": "Банкетка"}, {"id": "imvilslnw2gda", "t": "wardrobe", "x": 4.05, "y": 1.35, "rot": 90, "w": 2.4, "d": 0.55, "label": "Шкаф"}, {"id": "imvilsvah2kvi", "t": "desk", "x": 0.8, "y": 3.1500000000000004, "rot": 0, "w": 0.9, "d": 0.45, "label": "Косметический столик"}, {"id": "imvilu3vu2r32", "t": "dresser", "x": 1.8, "y": 3.1500000000000004, "rot": 0, "w": 1, "d": 0.45, "label": "Комод"}]}], "active": "v2", "ui": {"grid": true, "names": true, "dims": false, "look": "plan", "pal": "plan", "wall": "#c6c9ce", "finish": {}}};</script>
+<script>
+/* ---------- Plan geometry (source: pixel coords of the developer plan, 31.2 px = 1 m, origin = NW wall of the 14 m² room) ---------- */
+const S = 31.2, OX = 236, OY = 102, WALL = 0.24, INSET = 0.1;
+const M = (x, y) => [(x - OX) / S, (y - OY) / S];
+const MP = pts => pts.map(p => M(p[0], p[1]));
+
+const ROOMS = [
+  { id: 'bed', poly: [[236,102],[376,102],[376,212],[236,212]], labs: [{ k: 'bed', p: [314,186], a: '14 м²' }] },
+  { id: 'liv', poly: [[376,102],[432,68],[485,102],[559,102],[559,212],[376,212]], labs: [{ k: 'liv', p: [415,190], a: '19,6 м²' }] },
+  /* кабинет и присоединённая лоджия 4,2 м² — одно помещение, стены между ними нет */
+  { id: 'cab', poly: [[236,212],[340,212],[340,330],[180,330],[180,265]], labs: [{ k: 'cab', p: [284,262], a: '11,1 м²' }, { k: 'lg2', p: [206,272], a: '4,2 м²', s: 1 }] },
+  /* кухня и прихожая — одно открытое пространство, двери на кухню нет */
+  { id: 'kit', poly: [[190,330],[340,330],[340,212],[410,212],[410,385],[362,385],[362,380],[278,380],[278,440],[190,440],[148,422],[148,350]], labs: [{ k: 'kit', p: [232,352], a: '13,3 м²' }, { k: 'hall', p: [366,258], a: '' }] },
+  { id: 'wc', poly: [[278,380],[301,380],[301,440],[278,440]], labs: [{ k: 'wc', p: [289,396], a: '', s: 1 }] },
+  { id: 'bth', poly: [[301,380],[362,380],[362,440],[301,440]], labs: [{ k: 'bath', p: [333,397], a: 'вместе 3,9 м²', s: 1 }] },
+  { id: 'lg1', poly: [[559,102],[606,102],[606,180],[632,192],[632,200],[559,200]], loggia: true, labs: [{ k: 'lg1', p: [583,150], a: '4,3 м²', s: 1 }] }
+];
+ROOMS.forEach(r => { r.m = MP(r.poly); });
+const DEFAULT_NAMES = { bed: 'Спальня', liv: 'Гостиная', cab: 'Кабинет', lg2: 'Лоджия', kit: 'Кухня', hall: 'Прихожая', wc: 'WC', bath: 'Ванная', lg1: 'Лоджия' };
+
+/* doors: H hinge, C closed end of the leaf, into = a point on the side the leaf opens to */
+const DOORS = [
+  { H: [367,212], C: [341,212], into: [354,190] },   /* спальня */
+  { H: [380,212], C: [406,212], into: [393,190] },   /* гостиная */
+  { H: [340,245], C: [340,271], into: [310,258] },   /* кабинет: двойная распашная дверь */
+  { H: [340,297], C: [340,271], into: [310,284] },
+  { H: [299,380], C: [281,380], into: [290,365] },   /* WC */
+  { H: [346,380], C: [320,380], into: [333,360] },   /* ванная */
+  { H: [402,385], C: [375,385], into: [390,365] },   /* входная */
+  { H: [559,202], C: [559,175], into: [535,188] }    /* лоджия у гостиной */
+];
+const WINDOWS = [
+  [[236,122],[236,194]], [[559,115],[559,160]],
+  [[386,96],[428,71]], [[436,71],[478,96]],
+  [[148,358],[148,414]], [[187,334],[152,350]], [[152,422],[187,438]],
+  [[606,110],[606,172]], [[180,272],[180,322]]
+];
+const FIXTURES = [ [305,408,352,432,'bath'], [283,414,296,432,'wc'], [283,388,296,404,'basin'] ];
+const NIB = { x: (352.5 - OX) / S, y: (330 - OY) / S, w: 25 / S, d: WALL, rot: 0 };
+
+/* ---------- Catalog (sizes in cm) ---------- */
+const CATS = [
+  { id: 'sleep',  name: 'Сон',      col: 'var(--c-sleep)' },
+  { id: 'living', name: 'Гостиная', col: 'var(--c-living)' },
+  { id: 'store',  name: 'Хранение', col: 'var(--c-store)' },
+  { id: 'work',   name: 'Работа',   col: 'var(--c-work)' },
+  { id: 'kitchen',name: 'Кухня',    col: 'var(--c-kitchen)' },
+  { id: 'mark',   name: 'Разметка', col: 'var(--zone)' }
+];
+const CAT = [
+  ['bed160','sleep','Кровать 160×200','Кровать',160,200,'bed'],
+  ['bed140','sleep','Кровать 140×200','Кровать',140,200,'bed'],
+  ['bed90','sleep','Кровать 90×200','Кровать',90,200,'bed'],
+  ['night','sleep','Тумба прикроватная','Тумба',45,40,'rect'],
+  ['sofa3','living','Диван 3-местный','Диван',220,95,'sofa'],
+  ['sofa2','living','Диван 2-местный','Диван',160,90,'sofa'],
+  ['arm','living','Кресло','Кресло',80,85,'sofa'],
+  ['coffee','living','Журнальный стол','Журн. стол',100,55,'rect'],
+  ['tv','living','ТВ-тумба','ТВ',150,40,'rect'],
+  ['plant','living','Растение','',40,40,'plant'],
+  ['bplant','living','Растение большое','',60,60,'plant'],
+  ['rtable','living','Стол круглый','',100,100,'round'],
+  ['pouf','living','Пуф','',45,45,'round'],
+  ['rrug','living','Ковёр круглый','',160,160,'rrug'],
+  ['rug','living','Ковёр','Ковёр',240,170,'rug'],
+  ['wardrobe2','store','Шкаф-купе','Шкаф-купе',200,60,'wardrobe'],
+  ['wardrobe','store','Шкаф распашной','Шкаф',120,58,'wardrobe'],
+  ['dresser','store','Комод','Комод',100,45,'rect'],
+  ['shelf','store','Стеллаж','Стеллаж',80,35,'rect'],
+  ['bench','store','Банкетка','Банкетка',80,35,'rect'],
+  ['desk','work','Рабочий стол','Стол',140,70,'rect'],
+  ['desk2','work','Стол длинный (на двоих)','Стол',240,70,'rect'],
+  ['tri','work','Угловой стол (треугольный)','Стол',120,120,'tri'],
+  ['cdesk','work','Угловой стол со скосом','Стол',115,140,'cdesk'],
+  ['wchair','work','Рабочее кресло','Кресло',60,60,'chair'],
+  ['kset','kitchen','Кухонный гарнитур','Кухня',240,60,'kitchen'],
+  ['fridge','kitchen','Холодильник','Холод.',60,65,'rect'],
+  ['stove','kitchen','Плита','Плита',60,60,'stove'],
+  ['washer','kitchen','Стиральная машина','Стирал.',60,55,'washer'],
+  ['dtable','kitchen','Обеденный стол','Стол',120,75,'rect'],
+  ['dchair','kitchen','Стул','',45,45,'chair'],
+  ['ksofa','kitchen','Кухонный диванчик','Диванчик',130,62,'sofa'],
+  ['zone','mark','Зона (рамка)','Зона',250,200,'zone'],
+  ['note','mark','Метка (текст)','Метка',100,32,'note'],
+  ['outlet','mark','Розетка','',12,12,'outlet'],
+  ['lamp','mark','Светильник','',30,30,'lamp']
+].map(a => ({ id: a[0], cat: a[1], name: a[2], short: a[3], w: a[4], d: a[5], kind: a[6] }));
+const CATBY = Object.fromEntries(CAT.map(c => [c.id, c]));
+const SOFT = new Set(['zone','rug','rrug','note','outlet','lamp']);
+const LAYER = { zone: 0, rug: 1, rrug: 1, note: 4, outlet: 3, lamp: 3 };
+/* составные предметы: выпуклые части в долях ширины и глубины от центра */
+const PARTS = {
+  cdesk: [ [[0.1957,-0.5],[0.5,-0.5],[0.5,0.5],[-0.0217,0.5],[-0.0217,-0.3214]], [[-0.5,0.0714],[-0.0217,0.0714],[-0.0217,-0.3214]] ]
+};
+
+/* ---------- Geometry helpers ---------- */
+function corners(it) {
+  const a = it.rot * Math.PI / 180, c = Math.cos(a), s = Math.sin(a), hw = it.w / 2, hd = it.d / 2;
+  const kind = CATBY[it.t] ? CATBY[it.t].kind : 'rect';
+  const loc = kind === 'tri' ? [[-hw, hd], [hw, hd], [-hw, -hd]] : [[-hw, -hd], [hw, -hd], [hw, hd], [-hw, hd]];
+  return loc.map(p => [it.x + p[0] * c - p[1] * s, it.y + p[0] * s + p[1] * c]);
+}
+function satOverlap(A, B) {
+  for (const poly of [A, B]) {
+    for (let i = 0; i < poly.length; i++) {
+      const p = poly[i], q = poly[(i + 1) % poly.length];
+      const nx = q[1] - p[1], ny = p[0] - q[0];
+      let a0 = Infinity, a1 = -Infinity, b0 = Infinity, b1 = -Infinity;
+      for (const v of A) { const d = v[0]*nx + v[1]*ny; if (d < a0) a0 = d; if (d > a1) a1 = d; }
+      for (const v of B) { const d = v[0]*nx + v[1]*ny; if (d < b0) b0 = d; if (d > b1) b1 = d; }
+      if (a1 <= b0 + 1e-6 || b1 <= a0 + 1e-6) return false;
+    }
+  }
+  return true;
+}
+function pip(pt, poly) {
+  let ins = false;
+  for (let i = 0, j = poly.length - 1; i < poly.length; j = i++) {
+    const xi = poly[i][0], yi = poly[i][1], xj = poly[j][0], yj = poly[j][1];
+    if ((yi > pt[1]) !== (yj > pt[1]) && pt[0] < (xj - xi) * (pt[1] - yi) / (yj - yi) + xi) ins = !ins;
+  }
+  return ins;
+}
+function segDist(p, a, b) {
+  const dx = b[0] - a[0], dy = b[1] - a[1], l2 = dx*dx + dy*dy;
+  let t = l2 ? ((p[0]-a[0])*dx + (p[1]-a[1])*dy) / l2 : 0; t = Math.max(0, Math.min(1, t));
+  return Math.hypot(p[0] - (a[0] + t*dx), p[1] - (a[1] + t*dy));
+}
+function edgeDist(p, poly) {
+  let m = Infinity;
+  for (let i = 0; i < poly.length; i++) m = Math.min(m, segDist(p, poly[i], poly[(i + 1) % poly.length]));
+  return m;
+}
+function roomOf(pt) { for (const r of ROOMS) if (pip(pt, r.m)) return r; return null; }
+function partsOf(it) {
+  const kind = CATBY[it.t] ? CATBY[it.t].kind : 'rect';
+  if (!PARTS[kind]) return [corners(it)];
+  const a = it.rot * Math.PI / 180, c = Math.cos(a), sn = Math.sin(a);
+  return PARTS[kind].map(poly => poly.map(p => { const lx = p[0] * it.w, ly = p[1] * it.d; return [it.x + lx * c - ly * sn, it.y + lx * sn + ly * c]; }));
+}
+function partsOverlap(A, B) { for (const a of A) for (const b of B) if (satOverlap(a, b)) return true; return false; }
+function samples(it) {
+  const out = [[it.x, it.y]];
+  for (const k of partsOf(it)) { const n = k.length; for (let i = 0; i < n; i++) { out.push(k[i]); out.push([(k[i][0]+k[(i+1)%n][0])/2, (k[i][1]+k[(i+1)%n][1])/2]); } }
+  return out;
+}
+function badWalls(it) {
+  const r = roomOf([it.x, it.y]);
+  if (!r) return true;
+  for (const p of samples(it)) {
+    if (!pip(p, r.m) || edgeDist(p, r.m) < INSET) return true;
+  }
+  return false;
+}
+function computeIssues(items) {
+  const bad = new Set(), hard = items.filter(i => !SOFT.has(CATBY[i.t].kind));
+  for (const it of hard) if (badWalls(it)) bad.add(it.id);
+  const nib = [corners(NIB)];
+  for (const it of hard) if (partsOverlap(partsOf(it), nib)) bad.add(it.id);
+  for (let i = 0; i < hard.length; i++) for (let j = i + 1; j < hard.length; j++) {
+    if (partsOverlap(partsOf(hard[i]), partsOf(hard[j]))) { bad.add(hard[i].id); bad.add(hard[j].id); }
+  }
+  return bad;
+}
+
+/* ---------- Отделка и палитры ---------- */
+const FLOORS = [
+  { k: 'bed',  poly: [[236,102],[376,102],[376,212],[236,212]] },
+  { k: 'liv',  poly: [[376,102],[432,68],[485,102],[559,102],[559,212],[376,212]] },
+  { k: 'cab',  poly: [[236,212],[340,212],[340,330],[236,330]] },
+  { k: 'lg2',  poly: [[236,212],[236,330],[180,330],[180,265]] },
+  { k: 'kit',  poly: [[190,330],[278,330],[278,440],[190,440],[148,422],[148,350]] },
+  { k: 'hall', poly: [[278,330],[340,330],[340,212],[410,212],[410,385],[362,385],[362,380],[278,380]] },
+  { k: 'wc',   poly: [[278,380],[301,380],[301,440],[278,440]] },
+  { k: 'bath', poly: [[301,380],[362,380],[362,440],[301,440]] },
+  { k: 'lg1',  poly: [[559,102],[606,102],[606,180],[632,192],[632,200],[559,200]] }
+];
+FLOORS.forEach(f => { f.m = MP(f.poly); });
+const FINISHES = [['oak','Паркет светлый'],['walnut','Паркет тёмный'],['tilel','Плитка светлая'],['tiled','Плитка графит'],['stone','Камень серый'],['conc','Бетон'],['plan','Бежевый (схема)']];
+const FIN_DEFAULT = { bed: 'oak', liv: 'oak', cab: 'oak', lg2: 'stone', kit: 'oak', hall: 'oak', wc: 'tilel', bath: 'tilel', lg1: 'stone' };
+const WALLS = [['#c6c9ce','Светло-серые'],['#f1f1ef','Белые'],['#9aa3ad','Серо-синие'],['#4a5260','Графит'],['#d7c8b2','Тёплые бежевые']];
+const SWATCH = ['#f2efe9','#d8cbb4','#c4955f','#8b6a4a','#9aa57c','#6e8b57','#8fb3d9','#e6ae84','#d9a38a','#8a94a3','#2f353d'];
+const PALS = {
+  plan:  { name: 'По умолчанию', v: null },
+  nordic:{ name: 'Скандинавский', v: { '--c-sleep': '#a3ab84', '--c-living': '#eee7da', '--c-store': '#c79c68', '--c-work': '#c9a477', '--c-kitchen': '#dcd6ca', '--rug': '#b8a88c', '--plant': '#6e8b57', '--furn-ink': '#2a2520', '--zone': '#2f6f6b', '--note': '#f4e2a0' } },
+  graph: { name: 'Графит', v: { '--c-sleep': '#8794a6', '--c-living': '#6c7480', '--c-store': '#4d535c', '--c-work': '#5d6a78', '--c-kitchen': '#a3aab2', '--rug': '#3e444c', '--plant': '#5f8a66', '--furn-ink': '#f1f3f5', '--zone': '#e0a339', '--note': '#e5cf7c' } },
+  terra: { name: 'Тёплый', v: { '--c-sleep': '#d9a38a', '--c-living': '#ead0ae', '--c-store': '#b9835c', '--c-work': '#cf9a74', '--c-kitchen': '#ead7a8', '--rug': '#b4574a', '--plant': '#6f8f52', '--furn-ink': '#2b2018', '--zone': '#b4574a', '--note': '#f4e2a0' } }
+};
+const lum = hex => { const h = String(hex || '').replace('#', ''); if (h.length !== 6) return .6; const n = parseInt(h, 16); return (0.299 * (n >> 16) + 0.587 * ((n >> 8) & 255) + 0.114 * (n & 255)) / 255; };
+/* ---------- State ---------- */
+const $ = id => document.getElementById(id);
+const svg = $('plan');
+const NS = 'http://www.w3.org/2000/svg';
+let uidN = 0;
+const uid = () => 'i' + Date.now().toString(36) + (uidN++).toString(36) + Math.random().toString(36).slice(2, 4);
+const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+const r2 = v => Math.round(v * 1000) / 1000;
+const fmt = v => (Math.round(v * 100) / 100).toString().replace('.', ',');
+
+function mk(t, x, y, rot, wcm, dcm, label) {
+  const c = CATBY[t];
+  const it = { id: uid(), t, x, y, rot: rot || 0, w: (wcm || c.w) / 100, d: (dcm || c.d) / 100, label: label != null ? label : c.short };
+  return it;
+}
+function exampleItems() {
+  return [
+    /* спальня + рабочее место 1 */
+    mk('bed160', 2.9, 1.12, 0), mk('night', 1.85, 0.32, 0), mk('night', 3.95, 0.32, 0), mk('dresser', 0.75, 0.345, 0),
+    mk('zone', 1.0, 2.75, 0, 175, 130, 'Рабочее место 1'),
+    mk('desk', 1.0, 3.11, 180, 140, 60, 'Стол'), mk('wchair', 1.0, 2.5, 0, null, null, ''),
+    /* кабинет с лоджией: гардероб, гостевой диван, учёба */
+    mk('wardrobe2', 1.3, 3.95, 0, 175, 55, 'Гардероб'), mk('wardrobe', 2.7, 3.94, 0, 100, 58, 'Гардероб'),
+    mk('sofa2', 1.6, 6.74, 180, null, null, 'Гостевой диван'),
+    mk('zone', -0.35, 4.6, 0, 190, 170, 'Учёба / ML'),
+    mk('cdesk', -0.225, 4.4, 0, 115, 140, 'Стол'), mk('wchair', -0.8, 5.1, 215, null, null, ''),
+    /* гостиная: отдых и рабочее место 2 */
+    mk('zone', 6.4, 1.77, 0, 340, 320, 'Зона отдыха'),
+    mk('rug', 6.4, 1.55, 90), mk('tv', 4.81, 1.5, 270), mk('coffee', 6.05, 1.55, 90), mk('sofa3', 7.55, 1.55, 90),
+    mk('arm', 6.28, -0.15, 180), mk('plant', 7.0, 0.05, 0),
+    mk('zone', 9.375, 0.86, 0, 175, 150, 'Рабочее место 2'),
+    mk('desk', 9.88, 0.82, 90, 140, 70, 'Стол'), mk('wchair', 9.15, 0.82, 270, null, null, ''),
+    mk('shelf', 8.9, 3.235, 180), mk('shelf', 8.1, 3.235, 180),
+    /* кухня: угловой гарнитур как есть, диванчик в эркере */
+    mk('kset', 0.08, 10.41, 180, 230, 60, 'Кухня'), mk('fridge', 0.905, 9.2, 90), mk('stove', 0.93, 9.8, 90),
+    mk('zone', -1.675, 8.95, 0, 210, 170, 'Обеденная зона'),
+    mk('ksofa', -2.39, 8.95, 270), mk('dtable', -1.55, 8.95, 90, 120, 75, 'Стол'),
+    mk('dchair', -0.88, 8.65, 90), mk('dchair', -0.88, 9.25, 90),
+    /* прихожая */
+    mk('wardrobe', 5.18, 5.9, 90, 240, 55, 'Шкаф'), mk('bench', 5.28, 7.8, 90)
+  ];
+}
+const state = {
+  names: { ...DEFAULT_NAMES },
+  variants: [{ id: 'v2', name: 'Вариант 2 — рекомендованный', items: exampleItems() }],
+  active: 'v2',
+  ui: { grid: true, names: true, dims: false, look: 'plan', pal: 'plan', wall: '#c6c9ce', finish: {} }
+};
+let sel = null;
+let tab = 'sleep';
+const curV = () => state.variants.find(v => v.id === state.active) || state.variants[0];
+const items = () => curV().items;
+const byId = id => items().find(i => i.id === id);
+
+/* ---------- View (viewBox in meters) ---------- */
+const view = { cx: 5, cy: 5, w: 17 };
+const BBOX = { x0: -3.4, y0: -1.8, x1: 13.2, y1: 11.3 };
+function applyView() {
+  const W = svg.clientWidth || 800, H = svg.clientHeight || 600;
+  const h = view.w * H / W;
+  svg.setAttribute('viewBox', [view.cx - view.w / 2, view.cy - h / 2, view.w, h].map(r2).join(' '));
+}
+const scale = () => (svg.clientWidth || 800) / view.w;
+function fitView() {
+  const W = svg.clientWidth || 800, H = svg.clientHeight || 600;
+  const bw = BBOX.x1 - BBOX.x0, bh = BBOX.y1 - BBOX.y0;
+  view.w = Math.max(bw, bh * W / H);
+  view.cx = (BBOX.x0 + BBOX.x1) / 2; view.cy = (BBOX.y0 + BBOX.y1) / 2;
+  applyView(); renderAll();
+}
+function toWorld(ev) {
+  const pt = svg.createSVGPoint(); pt.x = ev.clientX; pt.y = ev.clientY;
+  const m = svg.getScreenCTM(); if (!m) return [0, 0];
+  const p = pt.matrixTransform(m.inverse()); return [p.x, p.y];
+}
+
+/* ---------- Static plan ---------- */
+const poly = (pts, extra) => `<polygon points="${pts.map(p => r2(p[0]) + ',' + r2(p[1])).join(' ')}" ${extra || ''}/>`;
+function doorSVG(d) {
+  const H = M(...d.H), C = M(...d.C), into = M(...d.into);
+  const v = [C[0] - H[0], C[1] - H[1]], r = Math.hypot(v[0], v[1]);
+  const rot = th => { const c = Math.cos(th), s = Math.sin(th); return [H[0] + v[0] * c - v[1] * s, H[1] + v[0] * s + v[1] * c]; };
+  const a = rot(Math.PI / 3), b = rot(-Math.PI / 3);
+  const da = Math.hypot(a[0] - into[0], a[1] - into[1]), db = Math.hypot(b[0] - into[0], b[1] - into[1]);
+  const e = da <= db ? a : b, sweep = da <= db ? 1 : 0;
+  const home = state.ui.look === 'home', gp = home ? floorPaint(into) : 'var(--floor)', lf = home ? '#7a6a55' : 'var(--wall)';
+  return `<line x1="${r2(H[0])}" y1="${r2(H[1])}" x2="${r2(C[0])}" y2="${r2(C[1])}" style="stroke:${gp}" stroke-width="${WALL + 0.07}"/>` +
+    `<line x1="${r2(H[0])}" y1="${r2(H[1])}" x2="${r2(e[0])}" y2="${r2(e[1])}" style="stroke:${lf}" stroke-width="0.05"/>` +
+    `<path d="M${r2(C[0])},${r2(C[1])} A${r2(r)},${r2(r)} 0 0 ${sweep} ${r2(e[0])},${r2(e[1])}" fill="none" style="stroke:var(--wall)" stroke-width="1" vector-effect="non-scaling-stroke" stroke-dasharray="3 3" opacity=".55"/>`;
+}
+const PATS = {
+  oak: ['1.6','.3','<rect width="1.6" height=".3" fill="#dcc29c"/><rect width=".92" height=".15" fill="#d9bf98"/><rect x=".92" width=".68" height=".15" fill="#e1caa5"/><rect y=".15" width=".5" height=".15" fill="#e1caa5"/><rect x=".5" y=".15" width="1.1" height=".15" fill="#d7bc94"/><path d="M0 .15H1.6M.92 0V.15M.5 .15V.3M0 .3H1.6" stroke="#c6a87c" stroke-width=".008" fill="none"/>'],
+  walnut: ['1.6','.3','<rect width="1.6" height=".3" fill="#936f4f"/><rect width=".92" height=".15" fill="#8f6c4c"/><rect x=".92" width=".68" height=".15" fill="#9a7757"/><rect y=".15" width=".5" height=".15" fill="#9a7757"/><rect x=".5" y=".15" width="1.1" height=".15" fill="#8a6849"/><path d="M0 .15H1.6M.92 0V.15M.5 .15V.3M0 .3H1.6" stroke="#6d5039" stroke-width=".008" fill="none"/>'],
+  tilel: ['.6','.6','<rect width=".6" height=".6" fill="#e8e5dd"/><path d="M0 0H.6M0 0V.6" stroke="#c9c4b9" stroke-width=".014" fill="none"/>'],
+  tiled: ['.6','.6','<rect width=".6" height=".6" fill="#8b9298"/><path d="M0 0H.6M0 0V.6" stroke="#6b7177" stroke-width=".014" fill="none"/>'],
+  stone: ['.45','.45','<rect width=".45" height=".45" fill="#a4a9ab"/><path d="M0 0H.45M0 0V.45" stroke="#868b8e" stroke-width=".014" fill="none"/>'],
+  conc:  ['1','1','<rect width="1" height="1" fill="#bdbfc1"/><circle cx=".2" cy=".3" r=".012" fill="#aeb0b3"/><circle cx=".7" cy=".6" r=".014" fill="#a9abae"/><circle cx=".45" cy=".85" r=".01" fill="#c9cbcd"/>']
+};
+function floorPaint(pt) {
+  const f = FLOORS.find(x => pip(pt, x.m)); if (!f) return 'var(--floor)';
+  const id = (state.ui.finish && state.ui.finish[f.k]) || FIN_DEFAULT[f.k];
+  return PATS[id] ? 'url(#fl-' + id + ')' : 'var(--floor)';
+}
+function renderStatic() {
+  const home = state.ui.look === 'home';
+  let s = '<defs><clipPath id="floorClip">' + ROOMS.map(r => poly(r.m)).join('') + '</clipPath>';
+  s += '<filter id="fsh" x="-20%" y="-20%" width="140%" height="150%"><feDropShadow dx=".03" dy=".06" stdDeviation=".05" flood-color="#2a1f12" flood-opacity=".32"/></filter>';
+  for (const k in PATS) s += `<pattern id="fl-${k}" width="${PATS[k][0]}" height="${PATS[k][1]}" patternUnits="userSpaceOnUse">${PATS[k][2]}</pattern>`;
+  s += '</defs>';
+  if (home) {
+    FLOORS.forEach(f => {
+      const id = (state.ui.finish && state.ui.finish[f.k]) || FIN_DEFAULT[f.k];
+      s += poly(f.m, PATS[id] ? `fill="url(#fl-${id})"` : 'style="fill:var(--floor)"');
+    });
+  } else {
+    s += ROOMS.map(r => poly(r.m, `style="fill:var(--floor)" fill-opacity="${r.loggia ? .55 : 1}"`)).join('');
+  }
+  if (state.ui.grid && !home) {
+    let g = '';
+    for (let x = -4; x <= 14; x++) g += `M${x},-2 V12 `;
+    for (let y = -2; y <= 12; y++) g += `M-4,${y} H14 `;
+    s += `<path d="${g}" clip-path="url(#floorClip)" fill="none" style="stroke:var(--grid)" stroke-width="1" vector-effect="non-scaling-stroke"/>`;
+  }
+  FIXTURES.forEach(f => {
+    const a = M(f[0], f[1]), b = M(f[2], f[3]);
+    const x = a[0], y = a[1], w = b[0] - a[0], h = b[1] - a[1];
+    const fl = home ? 'style="fill:#f7f8f8;stroke:#6b717b"' : 'style="fill:var(--paper);stroke:var(--wall)"';
+    s += `<rect x="${r2(x)}" y="${r2(y)}" width="${r2(w)}" height="${r2(h)}" rx="${f[4] === 'bath' ? .1 : .12}" ${fl} stroke-width="1.2" vector-effect="non-scaling-stroke" opacity=".92"/>`;
+    const ln = home ? 'style="stroke:#6b717b"' : 'style="stroke:var(--wall)"';
+    if (f[4] === 'bath') s += `<rect x="${r2(x + .08)}" y="${r2(y + .08)}" width="${r2(w - .16)}" height="${r2(h - .16)}" rx=".15" fill="none" ${ln} stroke-width="1" vector-effect="non-scaling-stroke" opacity=".5"/>`;
+    if (f[4] === 'wc') s += `<ellipse cx="${r2(x + w / 2)}" cy="${r2(y + h * .62)}" rx="${r2(w * .32)}" ry="${r2(h * .26)}" fill="none" ${ln} stroke-width="1" vector-effect="non-scaling-stroke" opacity=".6"/>`;
+    if (f[4] === 'basin') s += `<ellipse cx="${r2(x + w / 2)}" cy="${r2(y + h / 2)}" rx="${r2(w * .3)}" ry="${r2(h * .3)}" fill="none" ${ln} stroke-width="1" vector-effect="non-scaling-stroke" opacity=".6"/>`;
+  });
+  if (home) {
+    const wc = state.ui.wall || '#c6c9ce', edge = lum(wc) > .5 ? '#6b717b' : '#1d2128';
+    s += ROOMS.map(r => poly(r.m, `fill="none" stroke="${edge}" stroke-width="${WALL + .05}" stroke-linejoin="miter" stroke-miterlimit="6"`)).join('');
+    s += ROOMS.map(r => poly(r.m, `fill="none" stroke="${wc}" stroke-width="${WALL - .03}" stroke-linejoin="miter" stroke-miterlimit="6"`)).join('');
+    s += poly(corners(NIB), `fill="${wc}" stroke="${edge}" stroke-width=".02"`);
+  } else {
+    s += ROOMS.map(r => poly(r.m, `fill="none" style="stroke:var(--wall)" stroke-width="${WALL}" stroke-linejoin="miter" stroke-miterlimit="6"`)).join('');
+    s += poly(corners(NIB), 'style="fill:var(--wall)"');
+  }
+  s += DOORS.map(doorSVG).join('');
+  s += WINDOWS.map(w => {
+    const a = M(...w[0]), b = M(...w[1]);
+    const L = `x1="${r2(a[0])}" y1="${r2(a[1])}" x2="${r2(b[0])}" y2="${r2(b[1])}"`;
+    return `<line ${L} style="stroke:var(--glass)" stroke-width="${WALL * .8}"/><line ${L} style="stroke:${home ? '#ffffff' : 'var(--wall)'}" stroke-width="0.035"/>`;
+  }).join('');
+  if (state.ui.names) {
+    const tone = home ? 'style="fill:#2a2520"' : '';
+    ROOMS.forEach(r => r.labs.forEach(l => {
+      const p = M(...l.p), nm = state.names[l.k] || '';
+      const fs = l.s ? .22 : .3;
+      s += `<g pointer-events="none" text-anchor="middle"><text class="rname" ${tone} x="${r2(p[0])}" y="${r2(p[1])}" font-size="${fs}">${esc(nm)}</text>` +
+        (l.a ? `<text class="rarea" ${tone} x="${r2(p[0])}" y="${r2(p[1] + fs * 1.05)}" font-size="${fs * .78}">${l.a}</text>` : '') + '</g>';
+    }));
+  }
+  $('gStatic').innerHTML = s;
+}
+function applyPalette() {
+  const root = document.documentElement, all = ['--c-sleep','--c-living','--c-store','--c-work','--c-kitchen','--rug','--plant','--furn-ink','--zone','--note'];
+  all.forEach(k => root.style.removeProperty(k));
+  const p = PALS[state.ui.pal];
+  if (p && p.v) for (const k in p.v) root.style.setProperty(k, p.v[k]);
+}
+/* ---------- Items ---------- */
+let STR = 'style="stroke:var(--furn-line)" stroke-width="1.2" vector-effect="non-scaling-stroke"';
+const DARK = 'style="fill:rgba(0,0,0,.14)"';
+function shape(it, bad) {
+  const c = CATBY[it.t], w = it.w, d = it.d, x0 = -w / 2, y0 = -d / 2;
+  let fill = `fill:var(${c.cat === 'sleep' ? '--c-sleep' : c.cat === 'living' ? '--c-living' : c.cat === 'store' ? '--c-store' : c.cat === 'work' ? '--c-work' : '--c-kitchen'})`;
+  if (it.c) fill = 'fill:' + it.c;
+  const sb = bad ? 'style="stroke:var(--bad)" stroke-width="2.6" vector-effect="non-scaling-stroke"' : STR;
+  const body = `<rect x="${r2(x0)}" y="${r2(y0)}" width="${r2(w)}" height="${r2(d)}" rx="0.03" style="${fill}" ${sb}/>`;
+  const line = (x1, y1, x2, y2) => `<line x1="${r2(x1)}" y1="${r2(y1)}" x2="${r2(x2)}" y2="${r2(y2)}" ${STR} opacity=".6"/>`;
+  const ov = (x, y, ww, hh, r) => `<rect x="${r2(x)}" y="${r2(y)}" width="${r2(ww)}" height="${r2(hh)}" rx="${r || .02}" ${DARK}/>`;
+  switch (it.kind || c.kind) {
+    case 'tri': return `<polygon points="${r2(x0)},${r2(y0 + d)} ${r2(x0 + w)},${r2(y0 + d)} ${r2(x0)},${r2(y0)}" style="${fill}" ${sb} stroke-linejoin="round"/><line x1="${r2(x0 + .05)}" y1="${r2(y0 + d - .05)}" x2="${r2(x0 + .05)}" y2="${r2(y0 + .05)}" ${STR} opacity=".35"/>`;
+    case 'plant': {
+      const r = w / 2, lc = it.c ? it.c : 'var(--plant)';
+      let g = `<circle r="${r2(r * .38)}" style="fill:#7a5a3c" ${sb}/>`;
+      for (let k = 0; k < 7; k++) g += `<ellipse cx="0" cy="${r2(-r * .55)}" rx="${r2(r * .26)}" ry="${r2(r * .5)}" transform="rotate(${k * 51.4})" style="fill:${lc}" ${STR} opacity=".92"/>`;
+      return g + `<circle r="${r2(r * .14)}" ${DARK}/>`;
+    }
+    case 'rrug': return `<circle r="${r2(w / 2)}" style="fill:${it.c || 'var(--rug)'}" fill-opacity=".34" ${sb}/><circle r="${r2(w / 2 - .1)}" fill="none" ${STR} opacity=".35"/>`;
+    case 'cdesk': {
+      const pts = PARTS.cdesk.map(p => p.map(q => r2(q[0] * w) + ',' + r2(q[1] * d)).join(' '));
+      return pts.map(p => `<polygon points="${p}" style="${fill}" ${sb} stroke-linejoin="round"/>`).join('') +
+        pts.map(p => `<polygon points="${p}" style="${fill}"/>`).join('') +
+        `<polygon points="${pts[1]}" ${DARK}/>`;
+    }
+    case 'round': return `<circle r="${r2(w / 2)}" style="${fill}" ${sb}/><circle r="${r2(w / 2 - .05)}" fill="none" ${STR} opacity=".3"/>`;
+    case 'bed': {
+      const pw = w > 1.2 ? w * .4 : w * .7, ph = Math.min(.36, d * .2);
+      let s = body;
+      const pill = cx => `<rect x="${r2(cx - pw / 2)}" y="${r2(y0 + .08)}" width="${r2(pw)}" height="${r2(ph)}" rx=".08" style="fill:rgba(255,255,255,.65)" ${STR}/>`;
+      s += w > 1.2 ? pill(-w * .23) + pill(w * .23) : pill(0);
+      s += line(x0, y0 + d * .34, x0 + w, y0 + d * .34);
+      return s;
+    }
+    case 'sofa': {
+      const bk = d * .28, arm = Math.min(.14, w * .13);
+      return body + ov(x0, y0, w, bk, .04) + ov(x0, y0 + bk, arm, d - bk, .03) + ov(x0 + w - arm, y0 + bk, arm, d - bk, .03);
+    }
+    case 'chair': return body + ov(x0, y0, w, d * .24, .03);
+    case 'wardrobe': {
+      const n = Math.max(2, Math.round(w / .6)); let s = body;
+      for (let k = 1; k < n; k++) s += line(x0 + w * k / n, y0, x0 + w * k / n, y0 + d);
+      return s + line(x0, y0 + d - .04, x0 + w, y0 + d - .04);
+    }
+    case 'kitchen': {
+      let s = body + `<rect x="${r2(x0 + .04)}" y="${r2(y0 + .04)}" width="${r2(w - .08)}" height="${r2(d - .08)}" fill="none" ${STR} opacity=".35"/>`;
+      const sx = x0 + w * .28, hx = x0 + w * .74;
+      s += `<rect x="${r2(sx - .25)}" y="${r2(-.17)}" width=".5" height=".34" rx=".05" style="fill:rgba(255,255,255,.55)" ${STR}/>`;
+      [[-.1, -.1], [.1, -.1], [-.1, .1], [.1, .1]].forEach(p => s += `<circle cx="${r2(hx + p[0])}" cy="${r2(p[1])}" r=".065" fill="none" ${STR}/>`);
+      return s;
+    }
+    case 'stove': {
+      let s = body;
+      [[-.14, -.14], [.14, -.14], [-.14, .14], [.14, .14]].forEach(p => s += `<circle cx="${p[0]}" cy="${p[1]}" r=".07" fill="none" ${STR}/>`);
+      return s;
+    }
+    case 'washer': return body + `<circle r="${r2(Math.min(w, d) * .34)}" style="fill:rgba(255,255,255,.5)" ${STR}/>`;
+    case 'rug': return `<rect x="${r2(x0)}" y="${r2(y0)}" width="${r2(w)}" height="${r2(d)}" rx=".04" style="fill:var(--rug)" fill-opacity=".32" ${sb}/><rect x="${r2(x0 + .1)}" y="${r2(y0 + .1)}" width="${r2(Math.max(.05, w - .2))}" height="${r2(Math.max(.05, d - .2))}" fill="none" ${STR} opacity=".35"/>`;
+    case 'zone': return `<rect x="${r2(x0)}" y="${r2(y0)}" width="${r2(w)}" height="${r2(d)}" rx=".08" style="fill:var(--zone);stroke:var(--zone)" fill-opacity=".11" stroke-width="1.6" stroke-dasharray="7 5" vector-effect="non-scaling-stroke"/>`;
+    case 'note': return `<rect x="${r2(x0)}" y="${r2(y0)}" width="${r2(w)}" height="${r2(d)}" rx="${r2(d / 2)}" style="fill:var(--note)" ${STR}/>`;
+    case 'outlet': return `<rect x="${r2(x0)}" y="${r2(y0)}" width="${r2(w)}" height="${r2(d)}" rx=".03" style="fill:var(--note)" ${STR}/><circle cx="-.025" r=".012" ${DARK}/><circle cx=".025" r=".012" ${DARK}/>`;
+    case 'lamp': return `<circle r="${r2(w / 2)}" style="fill:var(--note)" ${STR}/><line x1="${r2(-w / 2)}" y1="0" x2="${r2(w / 2)}" y2="0" ${STR} opacity=".6"/><line x1="0" y1="${r2(-w / 2)}" x2="0" y2="${r2(w / 2)}" ${STR} opacity=".6"/>`;
+    default: return body;
+  }
+}
+function labelSVG(it, selected) {
+  const kind = CATBY[it.t].kind, text = it.label || '';
+  const a = it.rot * Math.PI / 180, c = Math.cos(a), s = Math.sin(a);
+  const ex = Math.abs(it.w * c) + Math.abs(it.d * s), ey = Math.abs(it.w * s) + Math.abs(it.d * c);
+  let out = '';
+  if (kind === 'zone') {
+    const lx = it.x - (-it.d / 2 + .22) * s, ly = it.y + (-it.d / 2 + .22) * c;
+    return text ? `<text class="flabel" x="${r2(lx)}" y="${r2(ly)}" font-size=".2" text-anchor="middle" dominant-baseline="central" style="fill:var(--zone);font-weight:600">${esc(text)}</text>` : '';
+  }
+  if (kind === 'outlet' || kind === 'lamp') return '';
+  if (text) {
+    let fs = Math.min(kind === 'note' ? .17 : .19, ex * .78 / (Math.max(text.length, 1) * .56));
+    if (fs >= .095 && ey > fs * 1.2) out += `<text class="flabel" ${it.c && lum(it.c) < .45 ? 'style="fill:#fff"' : ''} x="${r2(it.x)}" y="${r2(it.y)}" font-size="${r2(fs)}" text-anchor="middle" dominant-baseline="central">${esc(text)}</text>`;
+  }
+  if ((state.ui.dims || selected) && kind !== 'note') {
+    const t = Math.round(it.w * 100) + '×' + Math.round(it.d * 100);
+    const fs = Math.min(.14, ex * .9 / (t.length * .6));
+    if (fs >= .08) out += `<text class="dimtxt" x="${r2(it.x)}" y="${r2(it.y + (text ? .17 : 0))}" font-size="${r2(fs)}" text-anchor="middle" dominant-baseline="central">${t}</text>`;
+  }
+  return out;
+}
+let bad = new Set();
+function renderItems() {
+  const list = items().map((it, i) => ({ it, i })).sort((a, b) => (LAYER[a.it.t === 'zone' ? 'zone' : CATBY[a.it.t].kind] ?? 2) - (LAYER[b.it.t === 'zone' ? 'zone' : CATBY[b.it.t].kind] ?? 2) || a.i - b.i);
+  bad = computeIssues(items());
+  const home = state.ui.look === 'home';
+  STR = home ? 'style="stroke:rgba(40,32,24,.38)" stroke-width="1" vector-effect="non-scaling-stroke"' : 'style="stroke:var(--furn-line)" stroke-width="1.2" vector-effect="non-scaling-stroke"';
+  let g = '', l = '';
+  for (const { it } of list) {
+    const kd = CATBY[it.t].kind;
+    g += `<g data-id="${it.id}" ${home && !SOFT.has(kd) ? 'filter="url(#fsh)"' : ''} transform="translate(${r2(it.x)} ${r2(it.y)}) rotate(${it.rot})" style="cursor:move">${shape({ ...it, kind: kd }, bad.has(it.id))}</g>`;
+    l += labelSVG(it, it.id === sel);
+  }
+  $('gItems').innerHTML = g;
+  $('gLabels').innerHTML = l;
+  const n = bad.size, st = $('status');
+  st.classList.toggle('bad', n > 0);
+  $('statusTxt').textContent = n ? 'проблем: ' + n + ' (красный контур)' : 'без пересечений';
+}
+function renderSel() {
+  const it = sel && byId(sel), g = $('gSel');
+  if (!it) { g.innerHTML = ''; return; }
+  const k = 1 / scale(), hs = 11 * k, ro = 28 * k;
+  g.innerHTML = `<g transform="translate(${r2(it.x)} ${r2(it.y)}) rotate(${it.rot})">` +
+    `<rect x="${r2(-it.w / 2)}" y="${r2(-it.d / 2)}" width="${r2(it.w)}" height="${r2(it.d)}" fill="none" style="stroke:var(--accent)" stroke-width="1.8" stroke-dasharray="6 4" vector-effect="non-scaling-stroke" pointer-events="none"/>` +
+    `<line x1="0" y1="${r2(-it.d / 2)}" x2="0" y2="${r2(-it.d / 2 - ro)}" style="stroke:var(--accent)" stroke-width="1.5" vector-effect="non-scaling-stroke" pointer-events="none"/>` +
+    `<circle data-h="rot" cx="0" cy="${r2(-it.d / 2 - ro)}" r="${r2(hs * .62)}" style="fill:var(--panel);stroke:var(--accent);cursor:grab" stroke-width="2" vector-effect="non-scaling-stroke"/>` +
+    `<rect data-h="res" x="${r2(it.w / 2 - hs / 2)}" y="${r2(it.d / 2 - hs / 2)}" width="${r2(hs)}" height="${r2(hs)}" rx="${r2(hs * .2)}" style="fill:var(--accent);stroke:var(--panel);cursor:nwse-resize" stroke-width="1.5" vector-effect="non-scaling-stroke"/></g>`;
+}
+function renderAll() { applyPalette(); renderStatic(); renderItems(); renderSel(); renderProps(); renderVariants(); renderLook(); }
+function renderMove() { renderItems(); renderSel(); }
+/* ---------- Panels ---------- */
+const snap = (v, g) => Math.round(v / g) * g;
+function select(id) { sel = id; renderSel(); renderItems(); renderProps(); }
+function renderProps() {
+  const it = sel && byId(sel), body = $('propsBody');
+  if (!it) {
+    $('propsTitle').textContent = 'Выбранный предмет';
+    body.innerHTML = '<p class="empty">Нажмите на предмет на плане или добавьте новый из списка ниже. Углы выделенного предмета: круг сверху поворачивает, квадрат внизу меняет размер.</p>';
+    return;
+  }
+  const c = CATBY[it.t];
+  $('propsTitle').textContent = c.name;
+  body.innerHTML = `<div class="props">
+    <label class="wide">Подпись<input type="text" id="pLabel" value="${esc(it.label || '')}" maxlength="40"></label>
+    <label>Ширина, см<input type="number" id="pW" min="5" max="1500" step="5" value="${Math.round(it.w * 100)}"></label>
+    <label>Глубина, см<input type="number" id="pD" min="5" max="1500" step="5" value="${Math.round(it.d * 100)}"></label>
+    <label>Поворот, °<input type="number" id="pR" min="0" max="359" step="5" value="${Math.round(((it.rot % 360) + 360) % 360)}"></label>
+    <label>Положение, м<input type="text" id="pXY" readonly value="${fmt(it.x)} ; ${fmt(it.y)}"></label>
+    ${['zone','note','outlet','lamp'].includes(c.kind) ? '' : '<div class="wide" style="grid-column:1/-1"><span style="font-size:12px;color:var(--ink2)">Цвет предмета</span><div class="sws" id="pSws"></div></div>'}
+  </div>
+  <div class="row">
+    <button class="btn" id="bL" aria-label="Повернуть на 90° влево">↺ 90°</button>
+    <button class="btn" id="bR" aria-label="Повернуть на 90° вправо">↻ 90°</button>
+    <button class="btn" id="bDup">Дубль</button>
+    <button class="btn danger" id="bDel">Удалить</button>
+  </div>`;
+  $('pLabel').oninput = e => { const t = byId(sel); if (!t) return; t.label = e.target.value; if (CATBY[t.t].kind === 'note') t.w = Math.max(.3, e.target.value.length * .115 + .3); renderMove(); save(); };
+  const num = (id, fn) => { $(id).oninput = e => { const t = byId(sel), v = parseFloat(e.target.value); if (!t || !isFinite(v)) return; fn(t, v); renderMove(); save(); }; };
+  num('pW', (t, v) => { t.w = Math.max(.05, v / 100); });
+  num('pD', (t, v) => { t.d = Math.max(.05, v / 100); });
+  num('pR', (t, v) => { t.rot = v; });
+  const sw = $('pSws');
+  if (sw) {
+    const paint = () => { sw.innerHTML = `<button class="auto" data-c="" title="По палитре" aria-label="Цвет по палитре" aria-pressed="${!it.c}"></button>` + SWATCH.map(h => `<button data-c="${h}" style="background:${h}" aria-label="Цвет ${h}" aria-pressed="${it.c === h}"></button>`).join(''); };
+    paint();
+    sw.onclick = e => { const b = e.target.closest('button'); if (!b) return; const t = byId(sel); if (!t) return; if (b.dataset.c) t.c = b.dataset.c; else delete t.c; paint(); renderMove(); save(); };
+  }
+  $('bL').onclick = () => rotateSel(-90); $('bR').onclick = () => rotateSel(90);
+  $('bDup').onclick = dupSel; $('bDel').onclick = delSel;
+}
+function syncProps() {
+  const it = sel && byId(sel); if (!it || !$('pW')) return;
+  const set = (id, v) => { const e = $(id); if (e && document.activeElement !== e) e.value = v; };
+  set('pW', Math.round(it.w * 100)); set('pD', Math.round(it.d * 100));
+  set('pR', Math.round(((it.rot % 360) + 360) % 360)); set('pXY', fmt(it.x) + ' ; ' + fmt(it.y));
+}
+function rotateSel(a) { const it = sel && byId(sel); if (!it) return; it.rot = ((Math.round(it.rot / 5) * 5 + a) % 360 + 360) % 360; renderMove(); syncProps(); save(); }
+function delSel() { if (!sel) return; const v = curV(); v.items = v.items.filter(i => i.id !== sel); sel = null; renderMove(); renderProps(); save(); }
+function dupSel() { const it = sel && byId(sel); if (!it) return; const n = { ...it, id: uid(), x: it.x + .3, y: it.y + .3 }; items().push(n); select(n.id); save(); }
+function addItem(t) {
+  const c = CATBY[t], it = mk(t, snap(view.cx, .05), snap(view.cy, .05), 0);
+  if (c.kind === 'note') it.w = Math.max(.3, it.label.length * .115 + .3);
+  items().push(it); select(it.id); save();
+}
+function renderCatalog() {
+  $('tabs').innerHTML = CATS.map(c => `<button data-tab="${c.id}" aria-pressed="${c.id === tab}">${c.name}</button>`).join('');
+  $('cat').innerHTML = CAT.filter(c => c.cat === tab).map(c => {
+    const col = CATS.find(x => x.id === c.cat).col;
+    const dim = c.kind === 'note' ? 'текст' : Math.round(c.w) + '×' + Math.round(c.d);
+    return `<button data-add="${c.id}"><span class="sw" style="background:${col}"></span><span style="min-width:0"><b>${c.name}</b><small>${dim}</small></span></button>`;
+  }).join('');
+}
+function renderNames() {
+  const labs = []; ROOMS.forEach(r => r.labs.forEach(l => labs.push(l)));
+  $('names').innerHTML = labs.map(l => `<label>${l.a || 'по плану'}<input type="text" data-room="${l.k}" value="${esc(state.names[l.k] || '')}" maxlength="24"></label>`).join('');
+}
+let delArmed = 0;
+function renderVariants() {
+  $('variantSel').innerHTML = state.variants.map(v => `<option value="${v.id}"${v.id === state.active ? ' selected' : ''}>${esc(v.name)}</option>`).join('');
+  const nm = $('variantName'); if (nm && document.activeElement !== nm) nm.value = curV().name;
+  $('variantDel').disabled = state.variants.length < 2;
+  $('tLook').setAttribute('aria-pressed', state.ui.look === 'home');
+  $('tGrid').setAttribute('aria-pressed', state.ui.grid); $('tNames').setAttribute('aria-pressed', state.ui.names); $('tDims').setAttribute('aria-pressed', state.ui.dims);
+}
+function setVariant(id) { state.active = id; sel = null; renderAll(); save(); }
+
+function renderLook() {
+  const u = state.ui;
+  $('lookChips').innerHTML = [['plan', 'Схема'], ['home', 'Интерьер']].map(a => `<button data-look="${a[0]}" aria-pressed="${u.look === a[0]}">${a[1]}</button>`).join('');
+  $('palChips').innerHTML = Object.keys(PALS).map(k => `<button data-pal="${k}" aria-pressed="${u.pal === k}">${PALS[k].name}</button>`).join('');
+  $('wallSws').innerHTML = WALLS.map(w => `<button data-wall="${w[0]}" style="background:${w[0]}" title="${w[1]}" aria-label="${w[1]}" aria-pressed="${u.wall === w[0]}"></button>`).join('');
+  const labs = []; ROOMS.forEach(r => r.labs.forEach(l => labs.push(l)));
+  $('finSel').innerHTML = FLOORS.map(f => {
+    const cur = (u.finish && u.finish[f.k]) || FIN_DEFAULT[f.k];
+    return `<label>${esc(state.names[f.k] || f.k)}<select data-fin="${f.k}">${FINISHES.map(x => `<option value="${x[0]}"${x[0] === cur ? ' selected' : ''}>${x[1]}</option>`).join('')}</select></label>`;
+  }).join('');
+}
+/* ---------- Pointer interaction ---------- */
+let drag = null, moved = false;
+svg.addEventListener('pointerdown', e => {
+  if (e.button !== undefined && e.button > 0) return;
+  const h = e.target.closest && e.target.closest('[data-h]'), g = e.target.closest && e.target.closest('[data-id]');
+  const p = toWorld(e);
+  moved = false;
+  if (h && sel) { drag = { mode: h.dataset.h }; }
+  else if (g) {
+    const it = byId(g.dataset.id); if (!it) return;
+    if (sel !== it.id) select(it.id);
+    drag = { mode: 'move', ox: p[0] - it.x, oy: p[1] - it.y };
+  } else {
+    drag = { mode: 'pan', sx: e.clientX, sy: e.clientY, cx: view.cx, cy: view.cy };
+    svg.classList.add('panning');
+  }
+  try { svg.setPointerCapture(e.pointerId); } catch (_) {}
+  e.preventDefault();
+});
+svg.addEventListener('pointermove', e => {
+  if (!drag) return;
+  const it = sel && byId(sel);
+  if (drag.mode === 'pan') {
+    const k = 1 / scale();
+    view.cx = drag.cx - (e.clientX - drag.sx) * k; view.cy = drag.cy - (e.clientY - drag.sy) * k;
+    if (Math.abs(e.clientX - drag.sx) + Math.abs(e.clientY - drag.sy) > 3) moved = true;
+    applyView(); return;
+  }
+  if (!it) return;
+  const p = toWorld(e), free = e.altKey; moved = true;
+  if (drag.mode === 'move') {
+    it.x = free ? p[0] - drag.ox : snap(p[0] - drag.ox, .05);
+    it.y = free ? p[1] - drag.oy : snap(p[1] - drag.oy, .05);
+  } else if (drag.mode === 'rot') {
+    let a = Math.atan2(p[1] - it.y, p[0] - it.x) * 180 / Math.PI + 90;
+    a = ((a % 360) + 360) % 360;
+    if (!free) { const q = snap(a, 5), n = snap(a, 90); a = Math.abs(a - n) < 5 ? n : q; }
+    it.rot = a % 360;
+  } else if (drag.mode === 'res') {
+    const r = it.rot * Math.PI / 180, c = Math.cos(r), s = Math.sin(r), dx = p[0] - it.x, dy = p[1] - it.y;
+    const lx = dx * c + dy * s, ly = -dx * s + dy * c;
+    it.w = Math.max(.1, free ? 2 * Math.abs(lx) : snap(2 * Math.abs(lx), .05));
+    it.d = Math.max(.1, free ? 2 * Math.abs(ly) : snap(2 * Math.abs(ly), .05));
+  }
+  renderMove(); syncProps();
+});
+function endDrag(e) {
+  if (!drag) return;
+  const was = drag.mode; drag = null; svg.classList.remove('panning');
+  try { svg.releasePointerCapture(e.pointerId); } catch (_) {}
+  if (was === 'pan') { if (!moved && sel) select(null); }
+  else if (moved) save();
+}
+svg.addEventListener('pointerup', endDrag);
+svg.addEventListener('pointercancel', endDrag);
+svg.addEventListener('wheel', e => {
+  e.preventDefault();
+  const p = toWorld(e), f = Math.exp(e.deltaY * .0015);
+  view.w = Math.min(40, Math.max(4, view.w * f)); applyView();
+  const q = toWorld(e); view.cx += p[0] - q[0]; view.cy += p[1] - q[1];
+  applyView(); renderSel();
+}, { passive: false });
+const zoomBy = f => { view.w = Math.min(40, Math.max(4, view.w * f)); applyView(); renderSel(); };
+$('zIn').onclick = () => zoomBy(.8); $('zOut').onclick = () => zoomBy(1.25); $('zFit').onclick = fitView;
+
+document.addEventListener('keydown', e => {
+  const t = e.target, typing = t && (t.tagName === 'INPUT' || t.tagName === 'SELECT' || t.tagName === 'TEXTAREA');
+  if (typing || !sel) return;
+  const it = byId(sel); if (!it) return;
+  const k = e.key, step = e.shiftKey ? .25 : .05;
+  if (k === 'r' || k === 'R' || k === 'к' || k === 'К') { rotateSel(e.shiftKey ? -90 : 90); e.preventDefault(); }
+  else if (k === 'Delete' || k === 'Backspace') { delSel(); e.preventDefault(); }
+  else if (k === 'Escape') select(null);
+  else if ((e.ctrlKey || e.metaKey) && (k === 'd' || k === 'D')) { dupSel(); e.preventDefault(); }
+  else if (k.startsWith('Arrow')) {
+    if (k === 'ArrowLeft') it.x -= step; if (k === 'ArrowRight') it.x += step;
+    if (k === 'ArrowUp') it.y -= step; if (k === 'ArrowDown') it.y += step;
+    it.x = r2(it.x); it.y = r2(it.y); renderMove(); syncProps(); save(); e.preventDefault();
+  }
+});
+
+/* ---------- Controls ---------- */
+$('tabs').addEventListener('click', e => { const b = e.target.closest('[data-tab]'); if (b) { tab = b.dataset.tab; renderCatalog(); } });
+$('cat').addEventListener('click', e => { const b = e.target.closest('[data-add]'); if (b) addItem(b.dataset.add); });
+$('names').addEventListener('input', e => { const r = e.target.dataset.room; if (r) { state.names[r] = e.target.value; renderStatic(); save(); } });
+$('tGrid').onclick = () => { state.ui.grid = !state.ui.grid; renderStatic(); renderVariants(); save(); };
+$('tNames').onclick = () => { state.ui.names = !state.ui.names; renderStatic(); renderVariants(); save(); };
+$('tDims').onclick = () => { state.ui.dims = !state.ui.dims; renderItems(); renderVariants(); save(); };
+$('tLook').onclick = () => { state.ui.look = state.ui.look === 'home' ? 'plan' : 'home'; renderAll(); save(); };
+$('lookCard').addEventListener('click', e => {
+  const b = e.target.closest('button'); if (!b) return;
+  if (b.dataset.look) state.ui.look = b.dataset.look;
+  else if (b.dataset.pal) state.ui.pal = b.dataset.pal;
+  else if (b.dataset.wall) state.ui.wall = b.dataset.wall;
+  else return;
+  renderAll(); save();
+});
+$('lookCard').addEventListener('change', e => {
+  const k = e.target.dataset && e.target.dataset.fin; if (!k) return;
+  state.ui.finish = { ...(state.ui.finish || {}), [k]: e.target.value };
+  if (state.ui.look !== 'home') state.ui.look = 'home';
+  renderAll(); save();
+});
+$('variantSel').onchange = e => setVariant(e.target.value);
+$('variantName').oninput = e => { curV().name = e.target.value || 'Без названия'; const o = $('variantSel').selectedOptions[0]; if (o) o.textContent = curV().name; save(); };
+$('variantNew').onclick = () => { const n = { id: 'v' + uid(), name: 'Вариант ' + (state.variants.length + 1), items: [] }; state.variants.push(n); setVariant(n.id); };
+$('variantCopy').onclick = () => {
+  const v = curV(), n = { id: 'v' + uid(), name: v.name + ' (копия)', items: v.items.map(i => ({ ...i, id: uid() })) };
+  state.variants.push(n); setVariant(n.id);
+};
+$('variantDel').onclick = e => {
+  const b = e.currentTarget;
+  if (!delArmed) { delArmed = 1; b.textContent = 'Точно удалить?'; setTimeout(() => { delArmed = 0; b.textContent = 'Удалить'; }, 3000); return; }
+  delArmed = 0; b.textContent = 'Удалить';
+  state.variants = state.variants.filter(v => v.id !== state.active); state.active = state.variants[0].id; sel = null; renderAll(); save();
+};
+
+/* ---------- Обмен вариантами кодом ---------- */
+const CODE_PRE = 'P44T1:';
+const toB64 = s => btoa(unescape(encodeURIComponent(s)));
+const fromB64 = s => decodeURIComponent(escape(atob(s)));
+function exportCode() { const v = curV(); return CODE_PRE + toB64(JSON.stringify({ v: 1, name: v.name, items: v.items })); }
+function importCode(text) {
+  const raw = String(text || '').replace(/\s+/g, '');
+  if (!raw.startsWith(CODE_PRE)) throw new Error('Код должен начинаться с ' + CODE_PRE);
+  const o = JSON.parse(fromB64(raw.slice(CODE_PRE.length)));
+  if (!o || !Array.isArray(o.items)) throw new Error('В коде нет расстановки');
+  const its = o.items.filter(i => i && CATBY[i.t] && isFinite(i.x) && isFinite(i.y) && isFinite(i.w) && isFinite(i.d)).map(i => ({ ...i, id: uid() }));
+  if (!its.length) throw new Error('В коде нет подходящих предметов');
+  return { id: 'v' + uid(), name: String(o.name || 'Импорт').slice(0, 40), items: its };
+}
+$('xCopy').onclick = async () => {
+  const code = exportCode(), box = $('xBox'), msg = $('xMsg');
+  try { await navigator.clipboard.writeText(code); msg.textContent = 'Код скопирован. Отправьте его в мессенджере.'; }
+  catch (_) { box.value = code; box.focus(); box.select(); msg.textContent = 'Скопируйте код из поля выше (Ctrl+C).'; }
+};
+$('xLoad').onclick = () => {
+  const msg = $('xMsg');
+  try { const v = importCode($('xBox').value); state.variants.push(v); $('xBox').value = ''; setVariant(v.id); msg.textContent = 'Загружено: ' + v.name; }
+  catch (err) { msg.textContent = 'Не получилось: ' + (err && err.message ? err.message : 'код повреждён'); }
+};
+
+/* ---------- Persistence: shared db doc, localStorage fallback ---------- */
+let dbDoc = null, lastRev = '', saveTimer = 0, canWrite = true;
+const LS = 'p44t-plan-v1';
+function info(t, bad) { const e = $('saveInfo'); if (e) { e.textContent = t; e.style.color = bad ? 'var(--bad)' : ''; } }
+function payload() { return JSON.stringify({ names: state.names, variants: state.variants, active: state.active, ui: state.ui }); }
+function adopt(json) {
+  try {
+    const d = JSON.parse(json);
+    if (!d || !Array.isArray(d.variants) || !d.variants.length) return false;
+    state.names = { ...DEFAULT_NAMES, ...(d.names || {}) };
+    state.variants = d.variants.filter(v => v && Array.isArray(v.items)).map(v => ({ id: String(v.id), name: String(v.name || 'Вариант'), items: v.items.filter(i => i && CATBY[i.t]) }));
+    if (!state.variants.length) return false;
+    state.active = state.variants.some(v => v.id === d.active) ? d.active : state.variants[0].id;
+    state.ui = { ...state.ui, ...(d.ui || {}) };
+    if (sel && !byId(sel)) sel = null;
+    return true;
+  } catch (_) { return false; }
+}
+function save() {
+  clearTimeout(saveTimer); info('…');
+  saveTimer = setTimeout(async () => {
+    const json = payload();
+    try { localStorage.setItem(LS, json); } catch (_) {}
+    if (!dbDoc) { info('сохранено на этом устройстве'); return; }
+    if (!canWrite) { info('нет прав на запись, правки только здесь', true); return; }
+    lastRev = uid();
+    try { await dbDoc.set({ json, rev: lastRev, at: Date.now() }); info('сохранено для всех'); }
+    catch (err) { if (err && err.code === 'invalid_argument') canWrite = false; info('не сохранено: ' + ((err && err.code) || 'ошибка'), true); }
+  }, 500);
+}
+async function initDb() {
+  try {
+    if (!window.claude || !window.claude.use) return;
+    const db = await window.claude.use('db'); if (!db) return;
+    try { const u = await window.claude.use('user'); if (u && u.can && u.can('data.write') === false) canWrite = false; } catch (_) {}
+    dbDoc = db.doc('plan/main');
+    dbDoc.onSnapshot(snap => {
+      if (!snap.exists) { info(canWrite ? 'ещё не сохранялось' : 'только просмотр'); return; }
+      const d = snap.data() || {};
+      if (d.rev === lastRev || drag) return;
+      if (adopt(d.json)) { lastRev = d.rev; renderAll(); renderNames(); info('загружено'); }
+    }, () => info('общая база недоступна', true));
+  } catch (_) {}
+}
+
+/* ---------- Init ---------- */
+(function init() {
+  svg.innerHTML = '<g id="gStatic"></g><g id="gItems"></g><g id="gLabels"></g><g id="gSel"></g>';
+  const span = document.createElement('span'); span.id = 'saveInfo'; document.querySelector('.brand').appendChild(span);
+  let had = false;
+  try { const j = localStorage.getItem(LS); if (j) had = adopt(j); } catch (_) {}
+  if (!had && window.P44_EMBED) adopt(JSON.stringify(window.P44_EMBED));
+  renderCatalog(); renderNames(); fitView();
+  window.addEventListener('resize', () => { applyView(); renderSel(); });
+  if (window.ResizeObserver) new ResizeObserver(() => { applyView(); renderSel(); }).observe(svg);
+  initDb();
+})();
+</script>
+
+</body></html>
